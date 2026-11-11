@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#101b2c" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%2317283b'/%3E%3Ctext x='20' y='28' text-anchor='middle' font-family='sans-serif' font-size='27' font-weight='bold' fill='white'%3EF%3C/text%3E%3C/svg%3E" />
+  <title>Fronteiras — estratégia em turnos</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Fronteiras início"><span class="brand-mark">F</span><span>FRONTEIRAS<small>ESTRATÉGIA EM TURNOS</small></span></a>
+      <div class="top-actions"><span class="season-tag"><i></i> CAMPANHA 1939</span><button class="icon-btn" id="soundBtn" aria-label="Ativar ou desativar som" title="Som">♫</button><button class="icon-btn" id="settingsBtn" aria-label="Configurações" title="Configurações">☷</button></div>
+    </header>
+
+    <section class="game-layout" aria-label="Jogo">
+      <aside class="side-column left-column">
+        <section class="panel nation-card">
+          <div class="panel-kicker">SUA NAÇÃO</div>
+          <div class="nation-heading"><span id="playerFlag" class="flag flag-small"></span><div><h1 id="playerName">—</h1><p id="playerMotto">Escolha seu destino</p></div></div>
+          <button class="text-button" id="editFlagBtn">✳ Personalizar bandeira <span>›</span></button>
+          <div class="divider"></div>
+          <div class="stats-title"><span>RECURSOS</span><span class="income-note">por turno</span></div>
+          <div class="resource-list">
+            <div class="resource-row"><span class="resource-icon steel">▰</span><span class="resource-name">Indústria</span><strong id="industryValue">—</strong><small id="industryIncome">+0</small></div>
+            <div class="resource-row"><span class="resource-icon people">♟</span><span class="resource-name">Recrutas</span><strong id="manpowerValue">—</strong><small id="manpowerIncome">+0</small></div>
+            <div class="resource-row"><span class="resource-icon intel">◉</span><span class="resource-name">Influência</span><strong id="influenceValue">—</strong><small id="influenceIncome">+0</small></div>
+          </div>
+          <div class="divider"></div>
+          <div class="stats-title"><span>ESTADO DA GUERRA</span></div>
+          <div class="war-stats"><div><strong id="territoryCount">0</strong><span>territórios</span></div><div><strong id="armyCount">0</strong><span>divisões</span></div><div><strong id="turnCount">1</strong><span>turno</span></div></div>
+        </section>
+        <section class="panel objective-card"><div class="objective-icon">✦</div><div><div class="panel-kicker">OBJETIVO</div><p id="objectiveText">Una o continente.</p><div class="progress-track"><span id="objectiveProgress"></span></div><small id="objectiveCount">0 / 9 territórios</small></div></section>
+      </aside>
+
+      <section class="map-panel" aria-label="Mapa estratégico">
+        <div class="map-toolbar"><div><span class="live-dot"></span><span id="mapStatus">MAPA DO CONTINENTE</span></div><div class="map-tools"><button id="zoomOut" aria-label="Diminuir zoom">−</button><button id="zoomIn" aria-label="Aumentar zoom">+</button></div></div>
+        <div class="map-wrap" id="mapWrap">
+          <svg id="worldMap" viewBox="0 0 840 600" role="img" aria-label="Mapa de territórios. Toque em um território para selecioná-lo.">
+            <defs><pattern id="seaGrid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#a9c5d5" stroke-opacity=".12" stroke-width="1"/></pattern><filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#1c3446" flood-opacity=".15"/></filter></defs>
+            <rect width="840" height="600" fill="#dceaf0"/><rect width="840" height="600" fill="url(#seaGrid)"/>
+            <g class="map-labels" aria-hidden="true"><text x="418" y="86">MAR DO NORTE</text><text x="111" y="431">OCEANO LIVRE</text><text x="683" y="501">GOLFO AZUL</text><path d="M78 122l0 -33 7 11 7 -11 0 33" class="compass"/><text x="86" y="77" class="north">N</text></g>
+            <g id="territories" filter="url(#shadow)"></g>
+            <g id="mapOverlays"></g>
+          </svg>
+          <div class="map-legend"><span><i class="legend-you"></i> Sua nação</span><span><i class="legend-ally"></i> Outros</span><span><i class="legend-selected"></i> Selecionado</span></div>
+          <div class="map-hint" id="mapHint">Toque em um território para ver suas opções</div>
+        </div>
+        <div class="map-footer"><span><b id="ownedMapCount">0</b> territórios controlados</span><span class="footer-separator">•</span><span>Continente de <b>Valdória</b></span><span class="map-coord" id="mapCoord">45° N · 12° L</span></div>
+      </section>
+
+      <aside class="side-column right-column">
+        <section class="panel turn-panel"><div class="turn-top"><div><div class="panel-kicker">SITUAÇÃO</div><h2 id="phaseTitle">Aguardando comandante</h2></div><span class="turn-badge" id="turnBadge">TURNO 1</span></div><p id="phaseText" class="phase-text">Selecione um território para planejar sua próxima ação.</p><div class="divider"></div><div class="selection-card" id="selectionCard"><div class="selection-flag" id="selectionFlag">◇</div><div><div class="selection-name" id="selectionName">Nenhum território</div><div class="selection-sub" id="selectionSub">Toque no mapa para inspecionar</div></div></div><div class="selection-details" id="selectionDetails"></div><div id="actionButtons" class="action-buttons"></div></section>
+        <section class="panel intel-panel"><div class="panel-heading"><div class="panel-kicker">RELATÓRIO</div><span class="online-label"><i></i> AO VIVO</span></div><div id="logList" class="log-list"><div class="log-item"><span class="log-time">AGORA</span><span>O continente aguarda um novo líder.</span></div></div></section>
+        <button id="endTurnBtn" class="end-turn" disabled><span>Encerrar turno</span><b>→</b></button>
+        <div class="keyboard-hint">Dica: capture regiões vizinhas para expandir sua influência.</div>
+      </aside>
+    </section>
+    <footer class="app-footer"><span>FRONTEIRAS © 1939</span><span>Um jogo de estratégia leve · Feito para jogar em qualquer lugar</span><button id="newGameBtn">Nova campanha ↗</button></footer>
+  </main>
+
+  <div class="modal-backdrop visible" id="startModal" role="dialog" aria-modal="true" aria-labelledby="startTitle">
+    <section class="modal start-dialog"><button class="close-modal" data-close="startModal" aria-label="Fechar">×</button><div class="modal-eyebrow">A HISTÓRIA COMEÇA AGORA</div><h2 id="startTitle">Escolha uma nação</h2><p class="modal-intro">Uma campanha simples de estratégia. Expanda seu território, fortaleça seu exército e lidere Valdória.</p><div class="nation-grid" id="nationGrid"></div><div class="start-bottom"><button class="secondary-button" id="startFlagBtn">✳ Criar minha bandeira</button><button class="primary-button" id="beginBtn" disabled>Começar campanha <span>→</span></button></div><div class="modal-footnote">12 turnos · partidas rápidas · sem complicação</div></section>
+  </div>
+
+  <div class="modal-backdrop" id="flagModal" role="dialog" aria-modal="true" aria-labelledby="flagTitle">
+    <section class="modal flag-dialog"><button class="close-modal" data-close="flagModal" aria-label="Fechar">×</button><div class="modal-eyebrow">SÍMBOLO DA NAÇÃO</div><h2 id="flagTitle">Sua bandeira, suas regras</h2><p class="modal-intro">Monte uma identidade para sua nação. Você pode mudar de ideia a qualquer momento.</p><div class="flag-editor"><div class="flag-preview-wrap"><div id="flagPreview" class="flag-preview"></div><span>PRÉ-VISUALIZAÇÃO</span></div><div class="flag-options"><label>Estilo da bandeira<select id="flagPattern"><option value="horizontal">Faixas horizontais</option><option value="vertical">Faixas verticais</option><option value="diagonal">Diagonal</option><option value="cross">Cruz central</option><option value="quartered">Quadrantes</option><option value="solid">Cor única</option></select></label><div class="color-controls"><label>Cor principal<div class="swatches" id="colorOne"></div></label><label>Cor secundária<div class="swatches" id="colorTwo"></div></label><label>Cor de detalhe<div class="swatches" id="colorThree"></div></label></div><label>Símbolo<select id="flagSymbol"><option value="★">Estrela ★</option><option value="✦">Estrela do norte ✦</option><option value="☾">Lua crescente ☾</option><option value="✚">Cruz ✚</option><option value="⚡">Raio ⚡</option><option value="♜">Torre ♜</option><option value="●">Disco ●</option><option value="❖">Losango ❖</option><option value="♛">Coroa ♛</option><option value="🌿">Ramo 🌿</option><option value="—">Sem símbolo</option></select></label></div></div><div class="flag-presets"><span>COMBINAÇÕES RÁPIDAS</span><div id="presetList"></div></div><div class="modal-actions"><button class="secondary-button" data-close="flagModal">Cancelar</button><button class="primary-button" id="saveFlagBtn">Salvar bandeira <span>✓</span></button></div></section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="game.js"></script>
+</body>
+</html>
